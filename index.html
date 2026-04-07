@@ -13,8 +13,83 @@
 		/>
 	</head>
 	<body>
-		<h1>Arionel Todo</h1>
+		<h1 class="main__title">Arionel Todo</h1>
 
+		<div class="add">
+			<input
+				class="add__input"
+				type="text"
+				placeholder="Add new task"
+			/>
+			<button class="add__btn">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-plus-icon lucide-plus"
+				>
+					<path d="M5 12h14" />
+					<path d="M12 5v14" />
+				</svg>
+			</button>
+		</div>
+
+		<div class="list">
+			<ul class="todo-list">
+				<li class="todo-item">
+					<p class="todo__item-text">This is an example task</p>
+					<button class="todo__item-del">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="19"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-x-icon lucide-x"
+						>
+							<path d="M18 6 6 18" />
+							<path d="m6 6 12 12" />
+						</svg>
+					</button>
+				</li>
+				<li class="todo-item">
+					<div class="todo-item-box">
+						<input
+							class="item-checkbox"
+							type="checkbox"
+						/>
+						<p class="todo__item-text completed">This is an example task</p>
+					</div>
+					<button class="todo__item-del">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="19"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-x-icon lucide-x"
+						>
+							<path d="M18 6 6 18" />
+							<path d="m6 6 12 12" />
+						</svg>
+					</button>
+				</li>
+			</ul>
+		</div>
 		<script src="./main.js"></script>
 	</body>
 </html>
