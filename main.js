@@ -20,7 +20,7 @@ addBtn.addEventListener('click', () => {
 	}
 
 	renderTodos(inputValue)
-	saveToLocaleStorage(inputValue)
+	saveToLocalStorage(inputValue)
 	addInput.value = ''
 })
 
@@ -86,7 +86,7 @@ function renderTodos(todoText) {
 // add error text
 function showError(message) {
 	console.log(errorText)
-	errorText.innerHTML = message
+	errorText.textContent = message
 }
 
 // clear error text
@@ -122,7 +122,7 @@ function todosNumberUpdate() {
 
 // make the filter
 function filterTodo(e) {
-	const todo = todoList.children
+	const todo = Array.from(todoList.children)
 	todo.forEach(todo => {
 		switch (e.target.value) {
 			case 'all':
@@ -158,7 +158,7 @@ function checkLocalStorage() {
 }
 
 // save to localStorage
-function saveToLocaleStorage(todo) {
+function saveToLocalStorage(todo) {
 	let todos = checkLocalStorage()
 
 	todos.push(todo)
