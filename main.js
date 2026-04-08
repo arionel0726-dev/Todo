@@ -3,6 +3,10 @@ const addBtn = document.querySelector('.add__btn')
 const todoList = document.querySelector('.todo-list')
 const todosNumber = document.querySelector('.todos-number')
 const errorText = document.querySelector('.error-text')
+const filterSelect = document.querySelector('.filter__todo')
+
+document.addEventListener('DOMContentLoaded', getTodos)
+filterSelect.addEventListener('change', filterTodo)
 
 addBtn.addEventListener('click', () => {
 	const inputValue = addInput.value.trim()
@@ -16,7 +20,14 @@ addBtn.addEventListener('click', () => {
 	}
 
 	renderTodos(inputValue)
+	saveToLocaleStorage(inputValue)
 	addInput.value = ''
+})
+
+addInput.addEventListener('keydown', event => {
+	if (event.key === 'Enter') {
+		addBtn.click()
+	}
 })
 
 function renderTodos(todoText) {
@@ -86,6 +97,7 @@ function delTodo(event) {
 	// delete li item
 	const button = event.currentTarget
 	const li = button.parentElement
+	removeTodoFromLocalStorage(li)
 	li.remove()
 	todosNumberUpdate()
 }
@@ -93,6 +105,9 @@ function delTodo(event) {
 // check checkbox and if positive then add classlist
 function handleCheckboxChange(event) {
 	const check = event.currentTarget
+	const div = check.parentElement
+	const li = div.parentElement
+	li.classList.toggle('completed', check.checked)
 	const p = check.nextElementSibling
 	p.classList.toggle('completed', check.checked)
 	todosNumberUpdate()
@@ -104,4 +119,69 @@ function todosNumberUpdate() {
 
 	todosNumber.textContent = `Your remaining todos: ${remainingTodos}`
 }
+
+// make the filter
+function filterTodo(e) {
+	const todo = todoList.children
+	todo.forEach(todo => {
+		switch (e.target.value) {
+			case 'all':
+				todo.style.display = 'flex'
+				break
+			case 'active':
+				if (!todo.classList.contains('completed')) {
+					todo.style.display = 'flex'
+				} else {
+					todo.style.display = 'none'
+				}
+				break
+			case 'completed':
+				if (todo.classList.contains('completed')) {
+					todo.style.display = 'flex'
+				} else {
+					todo.style.display = 'none'
+				}
+				break
+		}
+	})
+}
+
+//check storage
+function checkLocalStorage() {
+	let todos
+	if (localStorage.getItem('todos') === null) {
+		todos = []
+	} else {
+		todos = JSON.parse(localStorage.getItem('todos'))
+	}
+	return todos
+}
+
+// save to localStorage
+function saveToLocaleStorage(todo) {
+	let todos = checkLocalStorage()
+
+	todos.push(todo)
+	localStorage.setItem('todos', JSON.stringify(todos))
+}
+
+function getTodos() {
+	let todos = checkLocalStorage()
+
+	todos.forEach(todo => {
+		renderTodos(todo)
+	})
+}
+function removeTodoFromLocalStorage(todo) {
+	const todoText = todo.children[0].children[1].textContent
+	let todos = checkLocalStorage()
+
+	const todoIndex = todos.indexOf(todoText)
+	if (todoIndex > -1) {
+		todos.splice(todoIndex, 1)
+	}
+	localStorage.setItem('todos', JSON.stringify(todos))
+}
+
+// update the todos number length
 todosNumberUpdate()
