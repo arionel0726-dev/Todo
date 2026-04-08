@@ -1,16 +1,21 @@
 const addInput = document.querySelector('.add__input')
 const addBtn = document.querySelector('.add__btn')
 const todoList = document.querySelector('.todo-list')
-const todoLi = document.querySelector('.todo-item')
+const todosNumber = document.querySelector('.todos-number')
+const errorText = document.querySelector('.error-text')
 
 addBtn.addEventListener('click', () => {
-	if (addInput.value.trim() === '') {
-		// later will add p text with error message
-		alert('Text must be filled out')
+	const inputValue = addInput.value.trim()
+
+	if (inputValue === '') {
+		clearError()
+
+		showError('Text must be filled out')
+
 		return
 	}
 
-	renderTodos(addInput.value)
+	renderTodos(inputValue)
 	addInput.value = ''
 })
 
@@ -19,11 +24,22 @@ function renderTodos(todoText) {
 	const li = document.createElement('li')
 	li.classList.add('todo-item')
 
+	// li item box
+	const box = document.createElement('div')
+	box.classList.add('todo-item-box')
+	li.appendChild(box)
+
+	// create input checkbox
+	const checkbox = document.createElement('input')
+	checkbox.classList.add('item-checkbox')
+	checkbox.type = 'checkbox'
+	box.appendChild(checkbox)
+
 	// create p
 	const p = document.createElement('p')
 	p.classList.add('todo__item-text')
 	p.textContent = todoText
-	li.appendChild(p)
+	box.appendChild(p)
 
 	//create button
 	const button = document.createElement('button')
@@ -47,14 +63,45 @@ function renderTodos(todoText) {
 	`
 	li.appendChild(button)
 	button.addEventListener('click', delTodo)
+	checkbox.addEventListener('change', handleCheckboxChange)
 
 	// append all into ul
 	todoList.appendChild(li)
+	clearError()
+	//todos number length
+	todosNumberUpdate()
 }
 
+// add error text
+function showError(message) {
+	console.log(errorText)
+	errorText.innerHTML = message
+}
+
+// clear error text
+function clearError() {
+	errorText.textContent = ''
+}
 function delTodo(event) {
 	// delete li item
 	const button = event.currentTarget
 	const li = button.parentElement
 	li.remove()
+	todosNumberUpdate()
 }
+
+// check checkbox and if positive then add classlist
+function handleCheckboxChange(event) {
+	const check = event.currentTarget
+	const p = check.nextElementSibling
+	p.classList.toggle('completed', check.checked)
+	todosNumberUpdate()
+}
+function todosNumberUpdate() {
+	const remainingTodos = todoList.querySelectorAll(
+		'.item-checkbox:not(:checked)'
+	).length
+
+	todosNumber.textContent = `Your remaining todos: ${remainingTodos}`
+}
+todosNumberUpdate()

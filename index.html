@@ -21,6 +21,16 @@
 				type="text"
 				placeholder="Add new task"
 			/>
+			<div class="select">
+				<select
+					name="filter"
+					class="filter__todo"
+				>
+					<option value="all">All</option>
+					<option value="active">Active</option>
+					<option value="completed">Completed</option>
+				</select>
+			</div>
 			<button class="add__btn">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -39,57 +49,13 @@
 				</svg>
 			</button>
 		</div>
-
-		<div class="list">
-			<ul class="todo-list">
-				<li class="todo-item">
-					<p class="todo__item-text">This is an example task</p>
-					<button class="todo__item-del">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="19"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-x-icon lucide-x"
-						>
-							<path d="M18 6 6 18" />
-							<path d="m6 6 12 12" />
-						</svg>
-					</button>
-				</li>
-				<li class="todo-item">
-					<div class="todo-item-box">
-						<input
-							class="item-checkbox"
-							type="checkbox"
-						/>
-						<p class="todo__item-text completed">This is an example task</p>
-					</div>
-					<button class="todo__item-del">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="19"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-x-icon lucide-x"
-						>
-							<path d="M18 6 6 18" />
-							<path d="m6 6 12 12" />
-						</svg>
-					</button>
-				</li>
-			</ul>
+		<div class="error">
+			<p class="error-text"></p>
 		</div>
+		<div class="list">
+			<ul class="todo-list"></ul>
+		</div>
+		<p class="todos-number"></p>
 		<script src="./main.js"></script>
 	</body>
 </html>
