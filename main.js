@@ -4,7 +4,7 @@ const todoList = document.querySelector('.todo-list')
 const todosNumber = document.querySelector('.todos-number')
 const errorText = document.querySelector('.error-text')
 const filterSelect = document.querySelector('.filter__todo')
-
+//test
 document.addEventListener('DOMContentLoaded', getTodos)
 filterSelect.addEventListener('change', filterTodo)
 
