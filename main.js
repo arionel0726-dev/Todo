@@ -231,7 +231,7 @@ function editTask(event) {
 	input.focus()
 
 	input.addEventListener('blur', () => saveUpdate())
-	input.addEventListener('keypress', e => {
+	input.addEventListener('keydown', e => {
 		if (e.key === 'Enter') saveUpdate()
 	})
 
