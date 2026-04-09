@@ -4,7 +4,7 @@ const todoList = document.querySelector('.todo-list')
 const todosNumber = document.querySelector('.todos-number')
 const errorText = document.querySelector('.error-text')
 const filterSelect = document.querySelector('.filter__todo')
-//test
+
 document.addEventListener('DOMContentLoaded', getTodos)
 filterSelect.addEventListener('change', filterTodo)
 
@@ -13,14 +13,18 @@ addBtn.addEventListener('click', () => {
 
 	if (inputValue === '') {
 		clearError()
-
 		showError('Text must be filled out')
-
 		return
 	}
 
-	renderTodos(inputValue)
-	saveToLocalStorage(inputValue)
+	const todoObject = {
+		id: Date.now().toString(36) + Math.random().toString(36).substring(2),
+		text: inputValue,
+		isCompleted: false
+	}
+
+	renderTodos(todoObject)
+	saveToLocalStorage(todoObject)
 	addInput.value = ''
 })
 
@@ -30,88 +34,120 @@ addInput.addEventListener('keydown', event => {
 	}
 })
 
-function renderTodos(todoText) {
-	// create li
+function renderTodos(todo) {
 	const li = document.createElement('li')
 	li.classList.add('todo-item')
+	li.dataset.id = todo.id
 
-	// li item box
+	if (todo.isCompleted) {
+		li.classList.add('completed')
+	}
+
+	const buttonChange = document.createElement('button')
+	buttonChange.classList.add('todo-change')
+	buttonChange.innerHTML = `
+			<img
+			src="./assets/square-pen.svg"
+			alt="todo change"
+		/>
+	`
+	li.appendChild(buttonChange)
+
 	const box = document.createElement('div')
 	box.classList.add('todo-item-box')
 	li.appendChild(box)
 
-	// create input checkbox
 	const checkbox = document.createElement('input')
 	checkbox.classList.add('item-checkbox')
 	checkbox.type = 'checkbox'
+	checkbox.checked = todo.isCompleted
 	box.appendChild(checkbox)
 
-	// create p
 	const p = document.createElement('p')
 	p.classList.add('todo__item-text')
-	p.textContent = todoText
+	p.textContent = todo.text
+
+	if (todo.isCompleted) {
+		p.classList.add('completed')
+	}
+
+	buttonChange.addEventListener('click', editTask)
+
 	box.appendChild(p)
 
-	//create button
 	const button = document.createElement('button')
 	button.classList.add('todo__item-del')
 	button.innerHTML = `
 		<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="19"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-x-icon lucide-x"
-						>
-							<path d="M18 6 6 18" />
-							<path d="m6 6 12 12" />
-						</svg>
+			xmlns="http://www.w3.org/2000/svg"
+			width="19"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="lucide lucide-x-icon lucide-x"
+		>
+			<path d="M18 6 6 18" />
+			<path d="m6 6 12 12" />
+		</svg>
 	`
 	li.appendChild(button)
+
 	button.addEventListener('click', delTodo)
 	checkbox.addEventListener('change', handleCheckboxChange)
 
-	// append all into ul
 	todoList.appendChild(li)
 	clearError()
-	//todos number length
 	todosNumberUpdate()
 }
 
-// add error text
 function showError(message) {
-	console.log(errorText)
 	errorText.textContent = message
 }
 
-// clear error text
 function clearError() {
 	errorText.textContent = ''
 }
+
 function delTodo(event) {
-	// delete li item
 	const button = event.currentTarget
 	const li = button.parentElement
-	removeTodoFromLocalStorage(li)
+
+	removeTodoFromLocalStorage(li.dataset.id)
 	li.remove()
 	todosNumberUpdate()
 }
 
-// check checkbox and if positive then add classlist
 function handleCheckboxChange(event) {
 	const check = event.currentTarget
 	const div = check.parentElement
 	const li = div.parentElement
+	const id = li.dataset.id
+
+	let todos = checkLocalStorage()
+
+	todos = todos.map(todo => {
+		if (todo.id === id) {
+			return {
+				...todo,
+				isCompleted: check.checked
+			}
+		}
+		return todo
+	})
+
+	localStorage.setItem('todos', JSON.stringify(todos))
+
 	li.classList.toggle('completed', check.checked)
 	const p = check.nextElementSibling
 	p.classList.toggle('completed', check.checked)
+
 	todosNumberUpdate()
 }
+
 function todosNumberUpdate() {
 	const remainingTodos = todoList.querySelectorAll(
 		'.item-checkbox:not(:checked)'
@@ -120,68 +156,112 @@ function todosNumberUpdate() {
 	todosNumber.textContent = `Your remaining todos: ${remainingTodos}`
 }
 
-// make the filter
 function filterTodo(e) {
-	const todo = Array.from(todoList.children)
-	todo.forEach(todo => {
+	const todos = Array.from(todoList.children)
+
+	todos.forEach(todo => {
 		switch (e.target.value) {
 			case 'all':
 				todo.style.display = 'flex'
 				break
 			case 'active':
-				if (!todo.classList.contains('completed')) {
-					todo.style.display = 'flex'
-				} else {
-					todo.style.display = 'none'
-				}
+				todo.style.display = todo.classList.contains('completed')
+					? 'none'
+					: 'flex'
 				break
 			case 'completed':
-				if (todo.classList.contains('completed')) {
-					todo.style.display = 'flex'
-				} else {
-					todo.style.display = 'none'
-				}
+				todo.style.display = todo.classList.contains('completed')
+					? 'flex'
+					: 'none'
 				break
 		}
 	})
 }
 
-//check storage
 function checkLocalStorage() {
 	let todos
-	if (localStorage.getItem('todos') === null) {
+	const storedTodos = localStorage.getItem('todos')
+
+	if (storedTodos === null) {
 		todos = []
 	} else {
-		todos = JSON.parse(localStorage.getItem('todos'))
+		try {
+			todos = JSON.parse(storedTodos)
+			if (!Array.isArray(todos)) {
+				todos = []
+			}
+		} catch (error) {
+			todos = []
+		}
 	}
+
 	return todos
 }
 
-// save to localStorage
 function saveToLocalStorage(todo) {
 	let todos = checkLocalStorage()
-
 	todos.push(todo)
 	localStorage.setItem('todos', JSON.stringify(todos))
 }
 
 function getTodos() {
-	let todos = checkLocalStorage()
-
+	const todos = checkLocalStorage()
 	todos.forEach(todo => {
 		renderTodos(todo)
 	})
+	todosNumberUpdate()
 }
-function removeTodoFromLocalStorage(todo) {
-	const todoText = todo.children[0].children[1].textContent
-	let todos = checkLocalStorage()
 
-	const todoIndex = todos.indexOf(todoText)
-	if (todoIndex > -1) {
-		todos.splice(todoIndex, 1)
-	}
+function removeTodoFromLocalStorage(id) {
+	let todos = checkLocalStorage()
+	todos = todos.filter(todo => todo.id !== id)
 	localStorage.setItem('todos', JSON.stringify(todos))
 }
 
-// update the todos number length
+function editTask(event) {
+	const todoChange = event.currentTarget
+	const div = todoChange.nextElementSibling
+	const p = div.children[1]
+	const input = document.createElement('input')
+	input.classList.add('change')
+	input.type = 'text'
+	input.value = p.textContent
+
+	div.replaceChild(input, p)
+	input.focus()
+
+	input.addEventListener('blur', () => saveUpdate())
+	input.addEventListener('keypress', e => {
+		if (e.key === 'Enter') saveUpdate()
+	})
+
+	function saveUpdate() {
+		const li = todoChange.parentElement
+		const id = li.dataset.id
+		const updatedValue = input.value.trim()
+
+		if (updatedValue === '') {
+			div.replaceChild(p, input)
+			return
+		}
+
+		let todos = checkLocalStorage()
+
+		todos = todos.map(todo => {
+			if (todo.id === id) {
+				return {
+					...todo,
+					text: updatedValue
+				}
+			}
+			return todo
+		})
+
+		localStorage.setItem('todos', JSON.stringify(todos))
+
+		p.textContent = updatedValue
+		div.replaceChild(p, input)
+	}
+}
+
 todosNumberUpdate()
