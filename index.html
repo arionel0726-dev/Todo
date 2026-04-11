@@ -13,53 +13,72 @@
 		/>
 	</head>
 	<body>
-		<h1 class="main__title">
-			Arionel
-			<span>Todo</span>
-		</h1>
+		<main class="container">
+			<h1 class="main__title">
+				Arionel
+				<span>Todo</span>
+			</h1>
 
-		<div class="add">
-			<input
-				class="add__input"
-				type="text"
-				placeholder="Add new task"
-			/>
-			<div class="select">
-				<select
-					name="filter"
-					class="filter__todo"
-				>
-					<option value="all">All</option>
-					<option value="active">Active</option>
-					<option value="completed">Completed</option>
-				</select>
-			</div>
-			<button class="clear-btn">Clear</button>
-			<button class="add__btn">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-plus-icon lucide-plus"
-				>
-					<path d="M5 12h14" />
-					<path d="M12 5v14" />
-				</svg>
-			</button>
-		</div>
-		<div class="error">
-			<p class="error-text"></p>
-		</div>
-		<div class="list">
-			<ul class="todo-list"></ul>
-		</div>
-		<p class="todos-number"></p>
+			<section class="todo-app">
+				<div class="toolbar">
+					<input
+						class="add__input"
+						type="text"
+						placeholder="Add new task"
+					/>
+
+					<button
+						class="add__btn"
+						type="button"
+						aria-label="Add task"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<path d="M5 12h14" />
+							<path d="M12 5v14" />
+						</svg>
+					</button>
+				</div>
+
+				<div class="controls">
+					<select
+						name="filter"
+						class="filter__todo"
+					>
+						<option value="all">All</option>
+						<option value="active">Active</option>
+						<option value="completed">Completed</option>
+					</select>
+
+					<button
+						class="clear-btn"
+						type="button"
+					>
+						Clear completed
+					</button>
+				</div>
+
+				<div class="error">
+					<p class="error-text"></p>
+				</div>
+
+				<div class="list">
+					<ul class="todo-list"></ul>
+				</div>
+
+				<p class="todos-number"></p>
+			</section>
+		</main>
+
 		<script src="./main.js"></script>
 	</body>
 </html>

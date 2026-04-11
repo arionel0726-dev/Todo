@@ -1,4 +1,3 @@
-// importing html elements
 const addInput = document.querySelector('.add__input')
 const addBtn = document.querySelector('.add__btn')
 const todoList = document.querySelector('.todo-list')
@@ -7,7 +6,6 @@ const errorText = document.querySelector('.error-text')
 const filterSelect = document.querySelector('.filter__todo')
 const clearBtn = document.querySelector('.clear-btn')
 
-// page eventListeners
 document.addEventListener('DOMContentLoaded', () => {
 	filterTodo()
 	updateTodosNumber()
@@ -24,7 +22,6 @@ addInput.addEventListener('keydown', event => {
 	}
 })
 
-// adding todo function
 function addTodo() {
 	const inputValue = addInput.value.trim()
 
@@ -41,13 +38,11 @@ function addTodo() {
 
 	saveToLocalStorage(todoObject)
 	addInput.value = ''
-
 	clearError()
 	filterTodo()
 	updateTodosNumber()
 }
 
-// todos render
 function renderTodos(todo) {
 	const li = document.createElement('li')
 	li.classList.add('todo-item')
@@ -83,6 +78,7 @@ function renderTodos(todo) {
 	const buttonDel = document.createElement('button')
 	buttonDel.classList.add('todo__item-del')
 	buttonDel.type = 'button'
+	buttonDel.setAttribute('aria-label', 'Delete task')
 	buttonDel.innerHTML = `
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +90,6 @@ function renderTodos(todo) {
 			stroke-width="2"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			class="lucide lucide-x-icon lucide-x"
 		>
 			<path d="M18 6 6 18" />
 			<path d="m6 6 12 12" />
@@ -115,17 +110,14 @@ function renderTodos(todo) {
 	todoList.appendChild(li)
 }
 
-// if input is empty then error show function
 function showError(message) {
 	errorText.textContent = message
 }
 
-// after adding todo clear error text function
 function clearError() {
 	errorText.textContent = ''
 }
 
-// deleting todo function
 function delTodo(event) {
 	const button = event.currentTarget
 	const li = button.closest('.todo-item')
@@ -135,7 +127,6 @@ function delTodo(event) {
 	updateTodosNumber()
 }
 
-// completing todo function
 function handleCheckboxChange(event) {
 	const checkbox = event.currentTarget
 	const li = checkbox.closest('.todo-item')
@@ -158,15 +149,12 @@ function handleCheckboxChange(event) {
 	updateTodosNumber()
 }
 
-// todos remaining text function
 function updateTodosNumber() {
 	const todos = checkLocalStorage()
 	const remainingTodos = todos.filter(todo => !todo.isCompleted).length
-
 	todosNumber.textContent = `Your remaining todos: ${remainingTodos}`
 }
 
-// the filter all/active/completed function
 function filterTodo() {
 	const todos = checkLocalStorage()
 	let filtered = todos
@@ -181,7 +169,6 @@ function filterTodo() {
 	filtered.forEach(todo => renderTodos(todo))
 }
 
-// the localStorage control function
 function checkLocalStorage() {
 	const storedTodos = localStorage.getItem('todos')
 
@@ -197,21 +184,18 @@ function checkLocalStorage() {
 	}
 }
 
-// saving todo to localStorage function
 function saveToLocalStorage(todo) {
 	const todos = checkLocalStorage()
 	todos.push(todo)
 	localStorage.setItem('todos', JSON.stringify(todos))
 }
 
-// when deleting todo need to remove todo from localStorage function
 function removeTodoFromLocalStorage(id) {
 	let todos = checkLocalStorage()
 	todos = todos.filter(todo => todo.id !== id)
 	localStorage.setItem('todos', JSON.stringify(todos))
 }
 
-// editing todo function
 function editTask(event) {
 	const editButton = event.currentTarget
 	const li = editButton.closest('.todo-item')
@@ -271,7 +255,6 @@ function editTask(event) {
 	})
 }
 
-// the clear completed todos button function
 function clearCompleted() {
 	let todos = checkLocalStorage()
 	todos = todos.filter(todo => !todo.isCompleted)
