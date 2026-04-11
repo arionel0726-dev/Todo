@@ -1,12 +1,28 @@
-# Todo app
+# 📋 Todo app
 
-## what we have now
+A simple and interactive Todo application build with vanilla Javascript.
 
-- add todo
-- add with enter
-- cant add if input empty
-- delete todo
-- added to localStorage
-- when delete todo remove it from localStorage
-- filter
-- the remaining number how much theres todos left
+## 📜 Features
+
+- Add new todos
+- Add todos by pressing Enter
+- Validation (can't add empty todo)
+- Delete todos
+- Edit todos
+- Mark todos as completed
+- Filter todos (all / active / completed)
+- Clear all completed todos
+- Remaining todos counter
+- Data persistence with LocalStorage
+
+## 🌐 Live Demo
+
+[live demo](https://arionel0726-dev.github.io/Todo/)
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/arionel0726-dev/Todo.git
+cd Todo
+open index.html
+```

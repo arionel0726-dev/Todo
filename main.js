@@ -224,8 +224,6 @@ function editTask(event) {
 	input.type = 'text'
 	input.value = p.textContent
 
-	let something = false
-
 	div.replaceChild(input, p)
 	input.focus()
 
@@ -235,7 +233,6 @@ function editTask(event) {
 	})
 
 	function saveUpdate() {
-		something = true
 		const li = todoChange.parentElement
 		const id = li.dataset.id
 		const updatedValue = input.value.trim()
