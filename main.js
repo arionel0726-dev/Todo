@@ -4,9 +4,11 @@ const todoList = document.querySelector('.todo-list')
 const todosNumber = document.querySelector('.todos-number')
 const errorText = document.querySelector('.error-text')
 const filterSelect = document.querySelector('.filter__todo')
+const clearBtn = document.querySelector('.clear-btn')
 
 document.addEventListener('DOMContentLoaded', getTodos)
 filterSelect.addEventListener('change', filterTodo)
+clearBtn.addEventListener('click', clearCompleted)
 
 addBtn.addEventListener('click', () => {
 	const inputValue = addInput.value.trim()
@@ -23,8 +25,8 @@ addBtn.addEventListener('click', () => {
 		isCompleted: false
 	}
 
-	renderTodos(todoObject)
 	saveToLocalStorage(todoObject)
+	filterTodo()
 	addInput.value = ''
 })
 
@@ -101,6 +103,7 @@ function renderTodos(todo) {
 
 	todoList.appendChild(li)
 	clearError()
+
 	todosNumberUpdate()
 }
 
@@ -117,7 +120,7 @@ function delTodo(event) {
 	const li = button.parentElement
 
 	removeTodoFromLocalStorage(li.dataset.id)
-	li.remove()
+	filterTodo()
 	todosNumberUpdate()
 }
 
@@ -145,6 +148,7 @@ function handleCheckboxChange(event) {
 	const p = check.nextElementSibling
 	p.classList.toggle('completed', check.checked)
 
+	filterTodo()
 	todosNumberUpdate()
 }
 
@@ -156,26 +160,21 @@ function todosNumberUpdate() {
 	todosNumber.textContent = `Your remaining todos: ${remainingTodos}`
 }
 
-function filterTodo(e) {
-	const todos = Array.from(todoList.children)
+function filterTodo() {
+	let todos = checkLocalStorage()
 
-	todos.forEach(todo => {
-		switch (e.target.value) {
-			case 'all':
-				todo.style.display = 'flex'
-				break
-			case 'active':
-				todo.style.display = todo.classList.contains('completed')
-					? 'none'
-					: 'flex'
-				break
-			case 'completed':
-				todo.style.display = todo.classList.contains('completed')
-					? 'flex'
-					: 'none'
-				break
-		}
-	})
+	let filtered = todos
+
+	if (filterSelect.value === 'all') {
+		filtered = todos
+	} else if (filterSelect.value === 'active') {
+		filtered = filtered.filter(todo => !todo.isCompleted)
+	} else if (filterSelect.value === 'completed') {
+		filtered = filtered.filter(todo => todo.isCompleted)
+	}
+
+	todoList.innerHTML = ''
+	filtered.forEach(todo => renderTodos(todo))
 }
 
 function checkLocalStorage() {
@@ -206,9 +205,7 @@ function saveToLocalStorage(todo) {
 
 function getTodos() {
 	const todos = checkLocalStorage()
-	todos.forEach(todo => {
-		renderTodos(todo)
-	})
+	filterTodo()
 	todosNumberUpdate()
 }
 
@@ -227,6 +224,8 @@ function editTask(event) {
 	input.type = 'text'
 	input.value = p.textContent
 
+	let something = false
+
 	div.replaceChild(input, p)
 	input.focus()
 
@@ -236,6 +235,7 @@ function editTask(event) {
 	})
 
 	function saveUpdate() {
+		something = true
 		const li = todoChange.parentElement
 		const id = li.dataset.id
 		const updatedValue = input.value.trim()
@@ -262,6 +262,20 @@ function editTask(event) {
 		p.textContent = updatedValue
 		div.replaceChild(p, input)
 	}
+}
+
+function clearCompleted() {
+	let todos = checkLocalStorage()
+
+	todos = todos.filter(todo => !todo.isCompleted)
+
+	localStorage.setItem('todos', JSON.stringify(todos))
+
+	todoList.innerHTML = ''
+
+	filterTodo()
+
+	todosNumberUpdate()
 }
 
 todosNumberUpdate()

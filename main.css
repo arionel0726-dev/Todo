@@ -36,6 +36,24 @@ body {
 	border-radius: 8px;
 	cursor: pointer;
 }
+.clear-btn {
+	margin-left: 10px;
+	font-size: 14px;
+	padding: 5px 5px;
+	color: #ffffff;
+	background-color: #0f0f0f;
+	border-radius: 9px;
+	border: none;
+	cursor: pointer;
+	right: 492px;
+	margin-top: 6px;
+	transition: all 0.3s ease-in-out;
+}
+.clear-btn:hover {
+	background-color: #616161;
+	color: #fafafa;
+}
+
 .add {
 	margin-top: 100px;
 	display: flex;
@@ -69,7 +87,7 @@ body {
 	border-radius: 9px;
 	border: none;
 	cursor: pointer;
-	right: 462px;
+	right: 520px;
 	margin-top: 6px;
 	transition: all 0.3s ease-in-out;
 }
